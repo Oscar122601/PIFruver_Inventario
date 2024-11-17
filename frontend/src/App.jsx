@@ -5,6 +5,7 @@ import LogoFruver from './assets/logo.png'; // Importa el logo
 
 const App = () => {
   const [productos, setProductos] = useState([]);
+  const [stock, setStock] = useState([]);
   const [nombre, setNombre] = useState('');
   const [precio, setPrecio] = useState('');
   const [descripcion, setDescripcion] = useState('');
@@ -15,13 +16,22 @@ const App = () => {
 
   useEffect(() => {
     fetchProductos();
+    fetchStock();
   }, []);
 
+  // Fetch para productos
   const fetchProductos = async () => {
-    const result = await axios('http://localhost:5000/productos');
+    const result = await axios.get('http://localhost:5000/productos');
     setProductos(result.data);
   };
 
+  // Fetch para stock
+  const fetchStock = async () => {
+    const result = await axios.get('http://localhost:5000/stock');
+    setStock(result.data);
+  };
+
+  // Función para agregar o editar productos
   const agregarProducto = async () => {
     if (modoEdicion) {
       await axios.put(`http://localhost:5000/productos/${productoEditando.idproducto}`, {
@@ -29,7 +39,7 @@ const App = () => {
         idubicaciones,
         idtipos,
         precio,
-        descripcion
+        descripcion,
       });
       setModoEdicion(false);
       setProductoEditando(null);
@@ -39,7 +49,7 @@ const App = () => {
         idubicaciones,
         idtipos,
         precio,
-        descripcion
+        descripcion,
       });
     }
     resetForm();
@@ -74,23 +84,8 @@ const App = () => {
       {/* Navbar */}
       <nav className="navbar navbar-expand-lg navbar-dark custom-navbar">
         <a className="navbar-brand" href="/">
-          <img
-            src={LogoFruver} // Usar la imagen importada
-            alt="Logo"
-            style={{ width: '80px', marginRight: '10px' }} // Aumentado tamaño del logo
-          />
+          <img src={LogoFruver} alt="Logo" style={{ width: '80px', marginRight: '10px' }} />
         </a>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ml-auto">
             <li className="nav-item active">
@@ -106,18 +101,19 @@ const App = () => {
         </div>
       </nav>
 
-      {/* Contenido principal */}
+      {/* Tabla de Productos */}
       <div className="container mt-4">
         <h1>{modoEdicion ? 'Editar Producto' : 'Agregar Producto'}</h1>
-
+        {/* Formulario de Producto */}
         <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Nombre" />
         <input type="number" value={precio} onChange={(e) => setPrecio(e.target.value)} placeholder="Precio" />
         <input type="text" value={descripcion} onChange={(e) => setDescripcion(e.target.value)} placeholder="Descripción" />
         <input type="number" value={idubicaciones} onChange={(e) => setIdUbicaciones(e.target.value)} placeholder="ID Ubicación" />
         <input type="number" value={idtipos} onChange={(e) => setIdTipos(e.target.value)} placeholder="ID Tipo" />
-        
         <button onClick={agregarProducto}>{modoEdicion ? 'Guardar Cambios' : 'Agregar Producto'}</button>
 
+        {/* Tabla de Productos */}
+        <h2>Lista de Productos</h2>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr>
@@ -139,8 +135,27 @@ const App = () => {
                 <td>{producto.tipos}</td>
                 <td>
                   <button onClick={() => iniciarEdicion(producto)}>Editar</button>
-                  <button onClick={() => eliminarProducto(producto.idproducto)} style={{ marginLeft: '10px' }}>Eliminar</button> {/* Espacio entre botones */}
+                  <button onClick={() => eliminarProducto(producto.idproducto)} style={{ marginLeft: '10px' }}>Eliminar</button>
                 </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {/* Tabla de Stock */}
+        <h2>Stock de Productos</h2>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr>
+              <th>Nombre del Producto</th>
+              <th>Cantidad</th>
+            </tr>
+          </thead>
+          <tbody>
+            {stock.map((item, index) => (
+              <tr key={index} style={{ backgroundColor: '#e8f5e9' }}>
+                <td>{item.producto}</td>
+                <td>{item.cantidad}</td>
               </tr>
             ))}
           </tbody>

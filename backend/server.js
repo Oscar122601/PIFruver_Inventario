@@ -86,6 +86,27 @@ app.delete('/productos/:id', (req, res) => {
   });
 });
 
+
+app.get('/stock', (req, res) => {
+  const query = `
+    SELECT 
+      p.nombre AS producto, 
+      SUM(l.cantidad) AS cantidad
+    FROM lote l
+    JOIN producto p ON l.idproducto = p.idproducto
+    GROUP BY l.idproducto;
+  `;
+  db.query(query, (err, result) => {
+    if (err) {
+      res.status(500).send('Error al obtener el stock');
+    } else {
+      res.json(result);
+    }
+  });
+});
+
+
+
 // Iniciar el servidor
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);
