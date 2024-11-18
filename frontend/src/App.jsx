@@ -6,6 +6,7 @@ import LogoFruver from './assets/logo.png'; // Importa el logo
 const App = () => {
   const [productos, setProductos] = useState([]);
   const [stock, setStock] = useState([]);
+  const [lotes, setLotes] = useState([]); // Estado para los lotes
   const [nombre, setNombre] = useState('');
   const [precio, setPrecio] = useState('');
   const [descripcion, setDescripcion] = useState('');
@@ -17,6 +18,7 @@ const App = () => {
   useEffect(() => {
     fetchProductos();
     fetchStock();
+    fetchLotes(); // Obtener los lotes
   }, []);
 
   // Fetch para productos
@@ -29,6 +31,12 @@ const App = () => {
   const fetchStock = async () => {
     const result = await axios.get('http://localhost:5000/stock');
     setStock(result.data);
+  };
+
+  // Fetch para lotes
+  const fetchLotes = async () => {
+    const result = await axios.get('http://localhost:5000/lotes');
+    setLotes(result.data);
   };
 
   // Función para agregar o editar productos
@@ -156,6 +164,31 @@ const App = () => {
               <tr key={index} style={{ backgroundColor: '#e8f5e9' }}>
                 <td>{item.producto}</td>
                 <td>{item.cantidad}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {/* Tabla de Lotes */}
+        <h2>Caducidad de Productos</h2>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr>
+              <th>ID Lote</th>
+              <th>Nombre del Producto</th>
+              <th>Fecha de Entrada</th>
+              <th>Fecha de Vencimiento</th>
+              <th>Días Restantes</th>
+            </tr>
+          </thead>
+          <tbody>
+            {lotes.map((lote, index) => (
+              <tr key={index} style={{ backgroundColor: '#f9f9f9' }}>
+                <td>{lote.idlote}</td>
+                <td>{lote.producto}</td>
+                <td>{new Date(lote.fechaEnt).toLocaleDateString()}</td>
+                <td>{new Date(lote.fechaCad).toLocaleDateString()}</td>
+                <td>{lote.diasRestantes}</td>
               </tr>
             ))}
           </tbody>

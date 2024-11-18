@@ -105,6 +105,29 @@ app.get('/stock', (req, res) => {
   });
 });
 
+// Endpoint para obtener los lotes y calcular los días restantes para caducar
+app.get('/lotes', (req, res) => {
+  const query = `
+    SELECT 
+      l.idlote, 
+      p.nombre AS producto, 
+      l.fechaEnt, 
+      l.fechaCad, 
+      DATEDIFF(l.fechaCad, CURDATE()) AS diasRestantes
+    FROM lote l
+    JOIN producto p ON l.idproducto = p.idproducto;
+  `;
+  db.query(query, (err, result) => {
+    if (err) {
+      res.status(500).send('Error al obtener los lotes');
+    } else {
+      res.json(result);
+    }
+  });
+});
+
+
+
 
 
 // Iniciar el servidor
