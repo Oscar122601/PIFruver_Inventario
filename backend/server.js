@@ -12,7 +12,7 @@ app.use(express.json());
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'admin',
+  password: 'admin1',
   database: 'bd-productos'
 });
 
@@ -43,6 +43,7 @@ app.get('/productos', (req, res) => {
 
 // Endpoint para agregar un producto
 app.post('/productos', (req, res) => {
+  
   const { nombre, idubicaciones, idtipos, precio, descripcion } = req.body;
   const query = `
     INSERT INTO producto (nombre, idubicaciones, idtipos, precio, descripcion)
@@ -60,19 +61,35 @@ app.post('/productos', (req, res) => {
 // Endpoint para actualizar un producto
 app.put('/productos/:id', (req, res) => {
   const { nombre, idubicaciones, idtipos, precio, descripcion } = req.body;
+  const id = parseInt(req.params.id, 10);
+
+  if (!nombre || !idubicaciones || !idtipos || !precio || !descripcion) {
+    return res.status(400).send('Todos los campos son obligatorios.');
+  }
+
+  if (isNaN(id)) {
+    return res.status(400).send('El ID proporcionado no es válido.');
+  }
+
   const query = `
     UPDATE producto
     SET nombre = ?, idubicaciones = ?, idtipos = ?, precio = ?, descripcion = ?
     WHERE idproducto = ?;
   `;
-  db.query(query, [nombre, idubicaciones, idtipos, precio, descripcion, req.params.id], (err, result) => {
+
+  db.query(query, [nombre, idubicaciones, idtipos, precio, descripcion, id], (err, result) => {
     if (err) {
+      console.error(err);
       res.status(500).send('Error al actualizar el producto');
+    } else if (result.affectedRows === 0) {
+      res.status(404).send('Producto no encontrado');
     } else {
       res.send('Producto actualizado');
     }
   });
 });
+
+
 
 // Endpoint para eliminar un producto
 app.delete('/productos/:id', (req, res) => {

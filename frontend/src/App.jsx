@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import LogoFruver from './assets/logo.png'; // Importa el logo
+import Swal from 'sweetalert2';
 
 const App = () => {
   const [productos, setProductos] = useState([]);
@@ -41,33 +42,80 @@ const App = () => {
 
   // Función para agregar o editar productos
   const agregarProducto = async () => {
-    if (modoEdicion) {
-      await axios.put(`http://localhost:5000/productos/${productoEditando.idproducto}`, {
-        nombre,
-        idubicaciones,
-        idtipos,
-        precio,
-        descripcion,
-      });
-      setModoEdicion(false);
-      setProductoEditando(null);
-    } else {
-      await axios.post('http://localhost:5000/productos', {
-        nombre,
-        idubicaciones,
-        idtipos,
-        precio,
-        descripcion,
+    try {
+      if (modoEdicion) {
+        // Actualizar producto existente
+        await axios.put(`http://localhost:5000/productos/${productoEditando.idproducto}`, {
+          nombre,
+          idubicaciones,
+          idtipos,
+          precio,
+          descripcion,
+        });
+        Swal.fire({
+          icon: 'success',
+          title: '¡Actualizado!',
+          text: 'El producto ha sido actualizado con éxito.',
+        });
+        setModoEdicion(false);
+        setProductoEditando(null);
+      } else {
+        // Crear un nuevo producto
+        await axios.post('http://localhost:5000/productos', {
+          nombre,
+          idubicaciones,
+          idtipos,
+          precio,
+          descripcion,
+        });
+        Swal.fire({
+          icon: 'success',
+          title: '¡Agregado!',
+          text: 'El producto ha sido agregado con éxito.',
+        });
+      }
+  
+      // Reinicia el formulario y actualiza la lista de productos
+      resetForm();
+      fetchProductos();
+    } catch (error) {
+      console.error('Error:', error);
+  
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.response?.data?.error || 'Ocurrió un problema al procesar la solicitud.',
       });
     }
-    resetForm();
-    fetchProductos();
   };
+  
 
   const eliminarProducto = async (id) => {
-    await axios.delete(`http://localhost:5000/productos/${id}`);
-    fetchProductos();
+    try {
+      // Realiza la eliminación del producto
+      await axios.delete(`http://localhost:5000/productos/${id}`);
+      
+      // Muestra una alerta de éxito
+      Swal.fire({
+        icon: 'success',
+        title: '¡Eliminado!',
+        text: 'El producto ha sido eliminado con éxito.',
+      });
+  
+      // Actualiza la lista de productos
+      fetchProductos();
+    } catch (error) {
+      console.error('Error:', error);
+  
+      // Muestra una alerta de error
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.response?.data?.error || 'Ocurrió un problema al intentar eliminar el producto.',
+      });
+    }
   };
+  
 
   const iniciarEdicion = (producto) => {
     setProductoEditando(producto);
