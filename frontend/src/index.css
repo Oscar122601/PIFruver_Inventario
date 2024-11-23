@@ -182,36 +182,52 @@ td button + button {
   }
 }
 
-/* Estilos generales del footer */
+/* Aseguramos que el body ocupe todo el alto disponible */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Contenedor principal para que se expanda y ocupe todo el espacio disponible */
+.main-content {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* El footer debe estar al final */
 .footer {
   background-color: #2c3e50;
   color: white;
-  padding: 40px 0;
+  padding: 10px 0;
   font-family: 'Arial', sans-serif;
+  margin-top: auto; /* Esto empuja el footer hacia abajo */
 }
 
+/* Estilo de las secciones dentro del footer */
 .footer-content {
   display: flex;
   justify-content: space-between;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 10px;
 }
 
 .footer-section {
   flex: 1;
-  padding: 20px;
+  padding: 10px;
 }
 
 .footer-section h3 {
   color: #f0f0f0;
-  margin-bottom: 15px;
-  font-size: 20px;
+  margin-bottom: 8px;
+  font-size: 16px;
 }
 
 .footer-section p {
   color: #dcdcdc;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .footer-section a {
@@ -230,24 +246,25 @@ td button + button {
 }
 
 .footer-section ul li {
-  margin: 10px 0;
+  margin: 6px 0;
 }
 
 .footer-section input[type="email"] {
-  padding: 10px;
-  margin-right: 10px;
+  padding: 8px;
+  margin-right: 8px;
   border: none;
-  border-radius: 5px;
-  font-size: 14px;
+  border-radius: 4px;
+  font-size: 12px;
 }
 
 .footer-section button {
-  padding: 10px 20px;
+  padding: 8px 15px;
   background-color: #3498db;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
   color: white;
   cursor: pointer;
+  font-size: 12px;
 }
 
 .footer-section button:hover {
@@ -255,8 +272,8 @@ td button + button {
 }
 
 .footer .social-links a {
-  margin: 0 10px;
-  font-size: 20px;
+  margin: 0 8px;
+  font-size: 16px;
   color: #f0f0f0;
   transition: color 0.3s ease;
 }
@@ -265,12 +282,11 @@ td button + button {
   color: #3498db;
 }
 
-/* Estilos para el footer inferior */
 .footer-bottom {
   background-color: #34495e;
   text-align: center;
-  padding: 15px 0;
-  font-size: 14px;
+  padding: 10px 0;
+  font-size: 12px;
 }
 
 /* Estilos responsivos */
@@ -281,7 +297,7 @@ td button + button {
   }
 
   .footer-section {
-    padding: 15px;
+    padding: 10px;
     text-align: center;
   }
 
@@ -292,4 +308,9 @@ td button + button {
   .footer-section button {
     width: 80%;
   }
+}
+
+/* Estilo para el botón de "Volver a la lista" */
+.btn-volver-lista {
+  margin-bottom: 20px; /* Añadir espacio debajo del botón */
 }

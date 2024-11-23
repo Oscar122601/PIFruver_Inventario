@@ -146,16 +146,28 @@ const App = () => {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ml-auto">
             <li className="nav-item active">
-              <a className="nav-link" href="/">PRODUCTOS</a>
+            <a className="nav-link" href="http://localhost:5175">PRODUCTOS</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/productos">Productos</a>
+              <a className="nav-link" href="http://localhost:5176">PEDIDO</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/contacto">Contacto</a>
-            </li>
+              <a className="nav-link" href="http://localhost:5173">VENTA</a>
+
+               </li>
           </ul>
         </div>
+        {/* Botón de salir alineado a la derecha */}
+        <button
+          className="btn btn-danger"
+          style={{ position: 'absolute', right: '10px' }}
+          onClick={() => {
+            window.location.href = 'http://localhost:5174/';
+          }}
+        >
+          Salir
+        </button>
+
       </nav>
 
       {/* Tabla de Productos */}
@@ -243,6 +255,7 @@ const App = () => {
           </tbody>
         </table>
       </div>
+      
       <footer className="footer">
         <div className="footer-content">
           <div className="footer-section about">
